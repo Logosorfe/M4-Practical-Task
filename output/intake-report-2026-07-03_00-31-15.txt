@@ -1,5 +1,5 @@
 === Shelter Intake Report ===
-Date generated: 02.07.2026
+Date generated: 03.07.2026
 
 Total imported: 31
 Total skipped: 6

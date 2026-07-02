@@ -31,9 +31,10 @@ public class ShelterCsvApplication {
                     .forEach(csvPath -> {
                         ImportResult result = importService.importAnimals(csvPath);
                         ShelterReportData reportData = analyticsService.buildReportData(result);
-                        String reportName = csvPath.getFileName().toString().replace(".csv", "")
-                                + "-report-" + LocalDateTime.now()
-                                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss")) + ".txt";
+                        String reportName = csvPath.getFileName().toString()
+                                .replace(".csv", "-report-"
+                                        + LocalDateTime.now()
+                                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss")) + ".txt");
                         Path outputPath = outputFolder.resolve(reportName);
 
                         reportExportService.writeReport(outputPath, reportData);
