@@ -1,0 +1,24 @@
+=== Shelter Intake Report ===
+Date generated: 02.07.2026
+
+Total imported: 31
+Total skipped: 6
+Invalid rows: [8, 9, 10, 34, 35, 36]
+
+--- Unique species ---
+Bird, Cat, Dog, Rabbit
+
+--- Per species breakdown ---
+Bird: 6 total, 2 vaccinated
+Cat: 8 total, 7 vaccinated
+Dog: 11 total, 10 vaccinated
+Rabbit: 6 total, 3 vaccinated
+
+--- Oldest per species ---
+Bird: Charlie (age 4)
+Cat: Cleo (age 5)
+Dog: Shadow (age 9)
+Rabbit: Gizmo (age 5)
+
+--- Needs Vet input to determine age ---
+Milo(Dog), Leo(Cat), Pepper(Bird)

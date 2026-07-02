@@ -4,7 +4,9 @@ import lv.bootcamp.shelter.model.Animal;
 import lv.bootcamp.shelter.service.data.ImportResult;
 import lv.bootcamp.shelter.service.data.ShelterReportData;
 
+import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ShelterAnalyticsService {
 
@@ -12,22 +14,56 @@ public class ShelterAnalyticsService {
         List<Animal> allAnimals = importResult.allAnimals();
 
         Set<String> uniqueSpecies = new TreeSet<>();
-        Map<String, List<Animal>> animalsBySpecies = new HashMap<>();
+        allAnimals.stream()
+                .map(Animal::getSpecies)
+                .forEach(uniqueSpecies::add);
+
+        Map<String, List<Animal>> animalsBySpecies = new TreeMap<>();
+        for (String species : uniqueSpecies) {
+            List<Animal> unique = allAnimals.stream()
+                    .filter(animal -> animal.getSpecies().equals(species))
+                    .toList();
+            animalsBySpecies.put(species, unique);
+        }
+
         List<String> animalsNeedingVetInput = new ArrayList<>();
+        allAnimals.stream()
+                .filter(animal -> animal.getAge() == null)
+                .forEach(animal -> animalsNeedingVetInput.add(animal.getName()
+                        + "(" + animal.getSpecies() + ")"));
 
-        // TODO Step 2:
-        // Fill all collections:
-        // - allAnimals (already available from import)
-        // - uniqueSpecies
-        // - animalsBySpecies
-        // - animalsNeedingVetInput with format name(species)
+        int skippedRows = importResult.skippedRows();
 
-        // TODO Step 3:
-        // Add necessary fields to ShelterReportData
-        // Use stream pipelines for:
-        // - vaccinated vs unvaccinated counts per species
-        // - oldest animal per species (excluding unknown ages)
+        List<Integer> invalidRows = new ArrayList<>(importResult.invalidRows());
 
-        return new ShelterReportData(importResult);
+        Map<String, Animal> oldestAnimals = new TreeMap<>();
+        for (String species : uniqueSpecies) {
+            Optional<Animal> oldestPerSpecies = allAnimals.stream()
+                    .filter(animal -> animal.getSpecies().equals(species))
+                    .filter(animal -> animal.getAge() != null)
+                    .max((o1, o2) -> o1.getAge() - o2.getAge());
+            oldestPerSpecies.ifPresent(animal -> oldestAnimals.put(species, animal));
+        }
+
+        Map<String, Long> vaccinatedPerSpecies =
+                allAnimals.stream()
+                        .collect(Collectors.groupingBy(
+                                Animal::getSpecies,
+                                TreeMap::new,
+                                Collectors.filtering(Animal::isVaccinated, Collectors.counting())
+                        ));
+
+
+        LocalDate generatedDate = LocalDate.now();
+
+        return new ShelterReportData(allAnimals,
+                uniqueSpecies,
+                animalsBySpecies,
+                animalsNeedingVetInput,
+                skippedRows,
+                invalidRows,
+                oldestAnimals,
+                vaccinatedPerSpecies,
+                generatedDate);
     }
 }

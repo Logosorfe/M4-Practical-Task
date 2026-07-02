@@ -3,12 +3,14 @@ package lv.bootcamp.shelter.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
 @Getter
-@Setter
+@Setter //when every field is final?
 @AllArgsConstructor
+@ToString
 public class Animal {
 
     private final String name;
