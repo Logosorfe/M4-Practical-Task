@@ -55,3 +55,9 @@ Use Maven wrapper (recommended):
 - Write unique timestamped report filenames.
 - Persist processed input filenames and skip duplicates.
 - Include invalid row numbers in report.
+
+## Teacher's comments
+``` text
+In analytics, prefer collector-first grouping to avoid repeated filtering passes, and simplify
+oldest-animal selection with Comparator.comparing(Animal::getAge). importAnimals is currently long and repeats the same skip bookkeeping block multiple times; extract shared skip handling and smaller validation helpers. After the logging module, prefer logger-based reporting consistently instead of mixing logger calls with System.out.println(...). Nice use of StringBuilder in report export to assemble output efficiently.
+```
